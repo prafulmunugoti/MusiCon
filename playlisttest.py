@@ -96,6 +96,74 @@ class PlaylistTest(unittest.TestCase):
         expected_output = False
         output = self.playlist.add_song_into_playlist_dictionary(playlist_name_input, title_name_input)
         self.assertEqual(output, expected_output) 
-        
+
+    # Test display_songs_in_playlist()
+    def test_display_songs_in_playlist_None(self):
+        input = None
+        expected_output = False
+        output = self.playlist.display_songs_in_playlist(input)
+        self.assertEqual(output, expected_output)
+    
+    def test_display_songs_in_playlist_empty(self):
+        input = ""
+        expected_output = False
+        output = self.playlist.display_songs_in_playlist(input)
+        self.assertEqual(output, expected_output)
+    
+    def test_display_songs_in_playlist_not_exist(self):
+        input = "something does not exist"
+        expected_output = False
+        output = self.playlist.display_songs_in_playlist(input)
+        self.assertEqual(output, expected_output)
+
+    def test_display_songs_in_playlist_empty_playlist(self):
+        input = "Playlist1"
+        expected_output = 0
+        self.playlist.create_a_new_playlist(input)
+        output = self.playlist.display_songs_in_playlist(input)
+        self.assertEqual(output, expected_output)
+    
+    def test_display_songs_in_playlist_success(self):
+        input = "Playlist1"
+        expected_output = 2
+        self.playlist.create_a_new_playlist(input)
+        self.playlist.add_song_into_playlist_dictionary(input, "title1")
+        self.playlist.add_song_into_playlist_dictionary(input, "title2")
+        output = self.playlist.display_songs_in_playlist(input)
+        self.assertEqual(output, expected_output)
+
+    # Test shuffle_songs_in_the_playlist()
+    def test_shuffle_songs_in_the_playlist_empty(self):
+        input = "Playlist1"
+        self.playlist.create_a_new_playlist(input)
+        original_list = self.playlist.playlist_dict[input]
+        output = self.playlist.shuffle_songs_in_the_playlist(input, original_list)
+        # Empty list should remain the same after shuffle
+        self.assertEqual(output, original_list)
+
+    def test_shuffle_songs_in_the_playlist_one_song(self):
+        input = "Playlist1"
+        self.playlist.create_a_new_playlist(input)
+        self.playlist.add_song_into_playlist_dictionary(input, "title1")
+        original_list = self.playlist.playlist_dict[input]
+        output = self.playlist.shuffle_songs_in_the_playlist(input, original_list)
+        # List with one element should remain the same after shuffle
+        self.assertEqual(output, original_list)
+        self.assertCountEqual(output, original_list)
+
+    def test_shuffle_songs_in_the_playlist_multiple_songs(self):
+        input = "Playlist1"
+        self.playlist.create_a_new_playlist(input)
+        self.playlist.add_song_into_playlist_dictionary(input, "title1")
+        self.playlist.add_song_into_playlist_dictionary(input, "title2")
+        self.playlist.add_song_into_playlist_dictionary(input, "title3")
+        self.playlist.add_song_into_playlist_dictionary(input, "title4")
+        self.playlist.add_song_into_playlist_dictionary(input, "title5")
+        original_list = self.playlist.playlist_dict[input]
+        output = self.playlist.shuffle_songs_in_the_playlist(input, original_list)
+        # This will sometimes fail, because the shuffled results could potentially remain the same
+        self.assertNotEqual(output, original_list)
+        self.assertCountEqual(output, original_list)
+
 if __name__ == '__main__':
     unittest.main()

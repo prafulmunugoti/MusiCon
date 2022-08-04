@@ -61,24 +61,24 @@ class Playlist:
         # and print them one by one
         # Check if key exist in dict or not
         if playlist in self.playlist_dict:
-            for key, value in self.playlist_dict.items():
-                if key == playlist:
-                    print("Songs in the playlist are :",self.playlist_dict[playlist])
+            print("Songs in the playlist are :",self.playlist_dict[playlist])
+            return len(self.playlist_dict[playlist])
         else:
             print("Playlist doesn't exist in the list, please use option 6 to create a playlist")
+            return False
             
     #function to randomly shuffling the list of songs in the playlist by swapping the picked element with 
     #the current element, and then picking the next random element from the remainder. The output is a random 
     #permutation of the playlist.
     def shuffle_songs_in_the_playlist(self,playlist_name,playlist):
-        print("playlist before shuffle :",playlist)
+        print("playlist before shuffle :\n",playlist)
         tmp_playlist = deepcopy(playlist)
         length = len(tmp_playlist)
         while (length):
             length = length-1
             rand_num = randint(0, length)
             tmp_playlist[length], tmp_playlist[rand_num] = tmp_playlist[rand_num], tmp_playlist[length]
-        print("playlist after shuffle :",tmp_playlist)
+        print("playlist after shuffle :\n",tmp_playlist)
         self.playlist_dict[playlist_name] = tmp_playlist
         return tmp_playlist
 
