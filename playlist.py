@@ -77,7 +77,8 @@ class Playlist:
         while (length):
             length = length-1
             rand_num = randint(0, length)
-            tmp_playlist[length], tmp_playlist[rand_num] = tmp_playlist[rand_num], tmp_playlist[length]
+            tmp_playlist[length], tmp_playlist[rand_num] = \
+                tmp_playlist[rand_num], tmp_playlist[length]
         print("playlist after shuffle :\n",tmp_playlist)
         self.playlist_dict[playlist_name] = tmp_playlist
         return tmp_playlist
