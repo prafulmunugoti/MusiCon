@@ -26,6 +26,8 @@ class Playlist:
     #function to create a playlist 
     def create_a_new_playlist(self,playlist):
         # Check if key exist in dict or not
+        if not playlist:
+            return
         if playlist not in self.playlist_dict: 
             self.playlist_dict[playlist] = []
         else: 
@@ -36,17 +38,22 @@ class Playlist:
         playlist_names = list(self.playlist_dict.keys())
         for playlist in playlist_names:
             print("    ",playlist,"\n")
+        return len(playlist_names)
         
     #function to append the song at the end of songs list of the Playlist object
-    def add_song_into_playlist_dictionary(self, playlist,title):
+    def add_song_into_playlist_dictionary(self, playlist, title):
         # Check if key exist in dict or not
         # Check if type of value of key is list or not
         # If type is not list then make it list
         # Append the value in list
+        if not playlist or not title:
+            return False
         if playlist in self.playlist_dict:
             if not isinstance(self.playlist_dict[playlist], list):
                 self.playlist_dict[playlist] = [self.playlist_dict[playlist]]
             self.playlist_dict[playlist].append(title)
+            return True
+        return False
 
     #function to display the songs in the playlist using a for loop
     def display_songs_in_playlist(self,playlist):

@@ -2,11 +2,12 @@ from library import Library
 import pandas as pd
 import unittest
 
-class libraryTest(unittest.TestCase):
+class LibraryTest(unittest.TestCase):
     def setUp(self):
         df = pd.read_csv('songs.csv')
         self.library = Library(df)
 
+    # test check_if_title_exists_in_musicon_library()
     def test_check_if_title_exists_in_musicon_library_empty_input(self):
         input = ""
         expected_output = False
@@ -25,6 +26,7 @@ class libraryTest(unittest.TestCase):
         output = self.library.check_if_title_exists_in_musicon_library(input)
         self.assertEqual(output, expected_output)
 
+    # test add_song_attributes_into_library_list()
     def test_add_song_attributes_into_library_list_new_song(self):
         input_artist = "artist"
         input_title = "title"
@@ -73,6 +75,7 @@ class libraryTest(unittest.TestCase):
             input_artist, input_title, input_length, input_genre, input_year, input_lyrics)
         self.assertEqual(len(self.library.df), expected_length)
 
+    # test delete_song_attributes_from_library_with_title_name()
     def test_delete_song_attributes_from_library_with_title_name_None(self):
         input = None
         expected_length = len(self.library.df)
@@ -97,6 +100,7 @@ class libraryTest(unittest.TestCase):
         self.library.delete_song_attributes_from_library_with_title_name(input)
         self.assertEqual(len(self.library.df), expected_length)
 
+    # test searching_for_titles_in_musicon_library_by_artist()
     def test_searching_for_titles_in_musicon_library_by_artist_None(self):
         input = None
         expected_output = 0
@@ -121,12 +125,14 @@ class libraryTest(unittest.TestCase):
         output = self.library.searching_for_titles_in_musicon_library_by_artist(input)
         self.assertEqual(output, expected_output)
 
+    # test show_all_titles_present_in_musicon_library()
     def test_show_all_titles_present_in_musicon_library(self):
         input = None
         expected_output = 47
         output = self.library.show_all_titles_present_in_musicon_library()
         self.assertEqual(output, expected_output)
 
+    # show_info_about_song_title_from_musicon_library()
     def test_show_info_about_song_title_from_musicon_library_None(self):
         input = None
         expected_output = 0
