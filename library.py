@@ -37,8 +37,6 @@ class Library:
         print("completed deleting the song from Data frame object")
         
     def searching_for_titles_in_musicon_library_by_artist(self,artist):
-        #extract the unique artist list 
-        artist_list = self.df["artist"].unique().tolist()
         #extract the titles based on artist name
         musicon_artists_df = self.df.loc[self.df['artist'] == artist]
         musicon_artist_list = musicon_artists_df["title"].tolist()
@@ -48,7 +46,8 @@ class Library:
             print("there are no songs with artist ",artist," in library\n")
         else:
             for artist_song in musicon_artist_list:
-                print("    ",artist_song)
+                print("\t",artist_song)
+        return total_songs
         
     def check_if_title_exists_in_musicon_library(self,title):
         #check if the song name exists in the library and returns true or false
@@ -60,17 +59,20 @@ class Library:
         song_titles_list = self.df["title"].unique().tolist()
         for song_title in song_titles_list:
             print("  ",song_title," \n")
+        return len(song_titles_list)
     
     def show_info_about_song_title_from_musicon_library(self,title):
         #extract the information about the song 
         df_song_info = self.df.loc[self.df['title'] == title]
-        print ("Attributes of the Song : ",title,"\n\n")
+        print("Attributes of the Song : ",title,"\n\n")
+        num_songs = len(df_song_info)
         # Iterate over each row
         for attribute in df_song_info.itertuples():
         # print requested song attributes for the title
-            print("    Title :",attribute.title,"\n")
-            print("    Artist :",attribute.artist,"\n")
-            print("    Length :",attribute.length,"\n")
-            print("    Genre :",attribute.genre,"\n")
-            print("    Year :",attribute.year,"\n")
-            print("    Lyrics :\n",attribute.lyrics,"\n")
+            print("\tTitle : ",attribute.title,"\n")
+            print("\tArtist : ",attribute.artist,"\n")
+            print("\tLength : ",attribute.length,"\n")
+            print("\tGenre : ",attribute.genre,"\n")
+            print("\tYear : ",attribute.year,"\n")
+            print("\tLyrics :\n",attribute.lyrics,"\n")
+        return num_songs
