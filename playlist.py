@@ -8,7 +8,7 @@
 #
 from copy import deepcopy
 from Node import Node
-from random import randint
+from random import randint, shuffle
 
 import time
 
@@ -79,6 +79,8 @@ class Playlist:
             rand_num = randint(0, length)
             tmp_playlist[length], tmp_playlist[rand_num] = \
                 tmp_playlist[rand_num], tmp_playlist[length]
+        if (length > 1 and tmp_playlist == playlist):
+            tmp_playlist == self.shuffle_songs_in_the_playlist(playlist_name, tmp_playlist)
         print("playlist after shuffle :\n",tmp_playlist)
         self.playlist_dict[playlist_name] = tmp_playlist
         return tmp_playlist
@@ -150,7 +152,7 @@ class Playlist:
     def display_songs_in_recently_played_stack(self):
         if self.is_empty():
             print("there are no songs that were played recently\n")
-            return 
+            return None
         else:
             print("Songs played Most Recent to Least recent\n")
             for recently_played_song in self.recently_played_stack:
@@ -164,10 +166,11 @@ class Playlist:
         if self.queue_tail is None:
             self.queue_head = Node(data)
             self.queue_tail = self.queue_head
-        else:
+        else :
             self.queue_tail.next = Node(data)
             self.queue_tail.next.prev = self.queue_tail
             self.queue_tail = self.queue_tail.next
+        self.queue_count += 1
     
     # dequeue operation used to pop the element and 
     def dequeue_the_song_recently_played_in_playlist_to_enqueue(self):
@@ -176,7 +179,9 @@ class Playlist:
         else:
             temp = self.queue_head.data
             self.queue_head = self.queue_head.next
-            self.queue_head.prev=None
+            if self.queue_head is not None:
+                self.queue_head.prev=None
+            self.queue_count -= 1
             return temp
         
     #display the elements of the loop queue

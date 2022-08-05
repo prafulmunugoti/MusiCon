@@ -161,9 +161,83 @@ class PlaylistTest(unittest.TestCase):
         self.playlist.add_song_into_playlist_dictionary(input, "title5")
         original_list = self.playlist.playlist_dict[input]
         output = self.playlist.shuffle_songs_in_the_playlist(input, original_list)
-        # This will sometimes fail, because the shuffled results could potentially remain the same
         self.assertNotEqual(output, original_list)
         self.assertCountEqual(output, original_list)
+
+    # Test push_to_recently_played_stack
+    def test_push_to_recently_played_stack_empty(self):
+        input = "Waka Waka"
+        expected_output = input
+        self.playlist.push_to_recently_played_stack(input)
+        self.assertEqual(len(self.playlist.recently_played_stack), 1)
+        self.assertEqual(self.playlist.recently_played_stack[0], expected_output)
+
+    def test_push_to_recently_played_stack_non_empty(self):
+        input = "Waka Waka"
+        expected_output = input
+        self.playlist.recently_played_stack.append("Stale Song")
+        self.playlist.push_to_recently_played_stack(input)
+        self.assertEqual(len(self.playlist.recently_played_stack), 2)
+        self.assertEqual(self.playlist.recently_played_stack[0], expected_output)
+        self.assertEqual(self.playlist.recently_played_stack[1], "Stale Song")
+
+    # Test display_songs_in_recently_played_stack
+    def test_display_songs_in_recently_played_stack_empty(self):
+        self.assertIsNone(self.playlist.display_songs_in_recently_played_stack())
+
+    def test_display_songs_in_recently_played_stack_nonempty(self):
+        self.playlist.recently_played_stack.append("Stale Song")
+        expected_output = self.playlist.recently_played_stack
+        self.assertEqual(self.playlist.display_songs_in_recently_played_stack(), expected_output)
+
+    # Test enqueue_the_song_recently_played_into_start_of_the_queue
+    def test_enqueue_the_song_recently_played_into_start_of_the_queue_empty(self):
+        input_data = "title1"
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue(input_data)
+        self.assertEqual(self.playlist.queue_count, 1)
+        self.assertEqual(self.playlist.queue_head, self.playlist.queue_tail)
+        self.assertEqual(self.playlist.queue_head.data, input_data)
+
+    def test_enqueue_the_song_recently_played_into_start_of_the_queue_one_node(self):
+        input_data = "title2"
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue("title1")
+        expected_head = self.playlist.queue_head
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue(input_data)
+        self.assertEqual(self.playlist.queue_count, 2)
+        self.assertEqual(self.playlist.queue_head, expected_head)
+        self.assertEqual(self.playlist.queue_tail.data, input_data)
+    
+    def test_enqueue_the_song_recently_played_into_start_of_the_queue_more_nodes(self):
+        input_data = "title3"
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue("title1")
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue("title2")
+        expected_head = self.playlist.queue_head
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue(input_data)
+        self.assertEqual(self.playlist.queue_count, 3)
+        self.assertEqual(self.playlist.queue_head, expected_head)
+        self.assertEqual(self.playlist.queue_head.next.data, "title2")
+        self.assertEqual(self.playlist.queue_tail.data, input_data)
+
+    # Test dequeue_the_song_recently_played_in_playlist_to_enqueue
+    def test_dequeue_the_song_recently_played_in_playlist_to_enqueue_empty(self):
+        self.assertIsNone(self.playlist.dequeue_the_song_recently_played_in_playlist_to_enqueue())
+
+    def test_dequeue_the_song_recently_played_in_playlist_to_enqueue_one_song(self):
+        expected_output = "title1"
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue(expected_output)
+        output = self.playlist.dequeue_the_song_recently_played_in_playlist_to_enqueue()
+        self.assertEqual(self.playlist.queue_count, 0)
+        self.assertEqual(output, expected_output)
+
+    def test_dequeue_the_song_recently_played_in_playlist_to_enqueue_more_songs(self):
+        expected_output = "title1"
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue(expected_output)
+        self.playlist.enqueue_the_song_recently_played_into_start_of_the_queue("title2")
+        tail = self.playlist.queue_tail
+        output = self.playlist.dequeue_the_song_recently_played_in_playlist_to_enqueue()
+        self.assertEqual(self.playlist.queue_count, 1)
+        self.assertEqual(output, expected_output)
+        self.assertEqual(self.playlist.queue_tail, tail)
 
 if __name__ == '__main__':
     unittest.main()
