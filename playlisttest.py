@@ -239,5 +239,45 @@ class PlaylistTest(unittest.TestCase):
         self.assertEqual(output, expected_output)
         self.assertEqual(self.playlist.queue_tail, tail)
 
+    # Test play_individual_song_on_user_input
+    def test_play_individual_song_on_user_input_normal(self):
+        input_title = "Shape of You"
+        expected_length = len(self.playlist.recently_played_stack)+1
+        self.playlist.play_individual_song_on_user_input(input_title)
+        self.assertEqual(len(self.playlist.recently_played_stack), expected_length)
+ 
+    def test_play_individual_song_on_user_input_empty_input(self):
+        input_title = ""
+        expected_length = len(self.playlist.recently_played_stack)+1
+        self.playlist.play_individual_song_on_user_input(input_title)
+        self.assertEqual(len(self.playlist.recently_played_stack), expected_length)
+
+    def test_play_individual_song_on_user_input_song_not_in_library(self):
+        input_title = "Song that does not exist in the library"
+        expected_length = len(self.playlist.recently_played_stack)+1
+        self.playlist.play_individual_song_on_user_input(input_title)
+        self.assertEqual(len(self.playlist.recently_played_stack), expected_length)
+
+    # test play_songs_in_the_playlist
+    def test_play_songs_in_the_playlist(self):
+        expected_output = "One"
+        self.playlist.playlist_dict = {'t1': ["One"]}
+        output = self.playlist.play_songs_in_the_playlist('t1', self.library)
+        self.assertEqual(self.playlist.recently_played_stack[0], expected_output)
+
+    def test_play_songs_in_the_playlist_empty(self):
+        expected_output = 0
+        self.playlist.playlist_dict = {'t1': []}
+        output = self.playlist.play_songs_in_the_playlist('t1', self.library)
+        self.assertEqual(len(self.playlist.recently_played_stack), expected_output)
+
+    # test loop_songs_in_the_playlist
+    # def test_loop_songs_in_the_playlist(self):
+    #     expected_output = "One"
+    #     self.playlist.playlist_dict = {'t1': ["One"]}
+    #     output = self.playlist.loop_songs_in_the_playlist('t1', self.library)
+    #     self.assertEqual(self.playlist.recently_played_stack[0], expected_output)
+
+        
 if __name__ == '__main__':
     unittest.main()
