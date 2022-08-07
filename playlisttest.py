@@ -272,12 +272,17 @@ class PlaylistTest(unittest.TestCase):
         self.assertEqual(len(self.playlist.recently_played_stack), expected_output)
 
     # test loop_songs_in_the_playlist
-    # def test_loop_songs_in_the_playlist(self):
-    #     expected_output = "One"
-    #     self.playlist.playlist_dict = {'t1': ["One"]}
-    #     output = self.playlist.loop_songs_in_the_playlist('t1', self.library)
-    #     self.assertEqual(self.playlist.recently_played_stack[0], expected_output)
-
+    def test_loop_songs_in_the_playlist(self):
+        expected_output = 2
+        self.playlist.playlist_dict = {'t1': ["Sing", "One"]}
+        self.playlist.loop_songs_in_the_playlist('t1', self.library)
+        self.assertEqual(len(self.playlist.recently_played_stack), expected_output)
+    
+    def test_loop_songs_in_the_playlist_empty(self):
+        expected_output = 0
+        self.playlist.playlist_dict = {'t1': []}
+        self.playlist.loop_songs_in_the_playlist('t1', self.library)
+        self.assertEqual(len(self.playlist.recently_played_stack), expected_output)
         
 if __name__ == '__main__':
     unittest.main()
