@@ -37,8 +37,14 @@ import pandas as pd
 import playlist
 
 class MusiCon():
+    def __init__(self):
+        #def musicon():
+        df = pd.read_csv('songs.csv')
+        self.playlist_object = playlist.Playlist()
+        self.library_object = library.Library(df)
+
     # function to display menu for the users     
-    def print_menu():
+    def print_menu(self):
         print(30 * "-" , "MuSiCoN" , 30 * "-")
         print("0.  Menu")
         print("1.  Add a new song to library")
@@ -54,11 +60,6 @@ class MusiCon():
         print("11. Exit")
         print(67 * "-")
 
-        #def musicon():
-        df = pd.read_csv('songs.csv')
-        playlist_object = playlist.Playlist()
-        library_object = library.Library(df)
-        
         loop=True      
         #while loop that goes on forever until exited 
         while loop:
@@ -87,98 +88,98 @@ class MusiCon():
                 genre = input("\nplease enter the song genre : ")
                 year = int(input("\nplease enter the song year : "))
                 lyrics = input("\nplease enter the song lyrics : ")
-                library_object.add_song_attributes_into_library_list(artist,title,length,genre,year,lyrics)
+                self.library_object.add_song_attributes_into_library_list(artist,title,length,genre,year,lyrics)
 
             elif choice==2:
                 print("you chose to delete a song from the existing library\n")
                 title = input("\nplease enter the song title : ")
-                check = library_object.check_if_title_exists_in_musicon_library(title)
+                check = self.library_object.check_if_title_exists_in_musicon_library(title)
                 if (check):
-                    library_object.delete_song_attributes_from_library_with_title_name(title)
+                    self.library_object.delete_song_attributes_from_library_with_title_name(title)
                 else:
                     print("title is not present in library to delete\n")
 
             elif choice==3:
                 print("you chose to see all songs present in existing library\n")
-                library_object.show_all_titles_present_in_musicon_library()
+                self.library_object.show_all_titles_present_in_musicon_library()
                 
             elif choice==4:
                 print("you chose option to search for songs of an Artist in library\n")
                 #check for songs in library
                 song_artist = input("please enter the artist name : ")
-                library_object.searching_for_titles_in_musicon_library_by_artist(song_artist)
+                self.num_song_artist = self.library_object.searching_for_titles_in_musicon_library_by_artist(song_artist)
 
             elif choice==5:
                 print("you chose option to play a song in library\n")
                 #check for songs in library
                 song_title = input("please enter the song title : ")
-                check = library_object.check_if_title_exists_in_musicon_library(song_title)
+                check = self.library_object.check_if_title_exists_in_musicon_library(song_title)
                 if (check):
-                    library_object.show_info_about_song_title_from_musicon_library(song_title)
-                    playlist_object.play_individual_song_on_user_input(song_title)
+                    self.library_object.show_info_about_song_title_from_musicon_library(song_title)
+                    self.playlist_object.play_individual_song_on_user_input(song_title)
                 else:
                     print(song_title," doesn't exist in the library, please use option 1 to add song to the library")
 
             elif choice==6:
                 print("you chose to create a new Playlist\n")
                 playlist_name = input("please enter the name of the playlist: ")
-                playlist_object.create_a_new_playlist(playlist_name)
+                self.playlist_object.create_a_new_playlist(playlist_name)
 
             elif choice==7:
                 print("Display Playlists in the Library\n")
-                playlist_object.display_existing_playlists()
+                self.playlist_object.display_existing_playlists()
 
             elif choice==8:
                 print("you chose to add songs to the playlist")
                 print("list of playlist available in libarary are : \n")
-                playlist_object.display_existing_playlists()
+                self.playlist_object.display_existing_playlists()
                 print("select a play list to add songs and enter the playlist name\n")
                 playlist_name = input("please enter the name of the playlist: ")
         #       display_song_present_in_the_library
                 print("enter song name to add to the playlist ",playlist_name)
                 title_name = input("please enter the name of the song: ")
-                playlist_object.add_song_into_playlist_dictionary(playlist_name,title_name)
+                self.playlist_object.add_song_into_playlist_dictionary(playlist_name,title_name)
                 while(1):
                     add_more = input("want to add more songs into playlist y/n\n")
                     if(add_more == 'n'):
-                        break;
+                        break
                     else:
                         print("enter song name to add to the playlist ",playlist_name)
                         title_name = input("please enter the name of the song name: ")
-                        playlist_object.add_song_into_playlist_dictionary(playlist_name,title_name)
+                        self.playlist_object.add_song_into_playlist_dictionary(playlist_name,title_name)
 
             elif choice==9:
                 print("you choose to play songs in the playlist\n")
                 print("list of playlist available in libarary are : \n")
-                playlist_object.display_existing_playlists()
+                self.playlist_object.display_existing_playlists()
                 print("select a play list to play and enter the playlist name\n")
                 playlist_name = input("please enter the name of the playlist: ")
                 playlist_mode = int(input("please select the mode you like to choose :\n1.normal\n2.shuffle\n3.loop\n"))
                 if (playlist_mode == 1):
-                    playlist_object.play_songs_in_the_playlist(playlist_name, library_object)
+                    self.playlist_object.play_songs_in_the_playlist(playlist_name, self.library_object)
                 elif (playlist_mode == 2):
-                    shuffled_playlist = playlist_object.shuffle_songs_in_the_playlist(playlist_name,playlist.playlist_dict[playlist_name])
+                    shuffled_playlist = self.playlist_object.shuffle_songs_in_the_playlist(playlist_name,playlist.playlist_dict[playlist_name])
                     while(1):
                         shuffle_again = input("do you wish to shuffle the playlist again -- y/n?")
                         if shuffle_again == 'y':
-                            shuffled_playlist = playlist_object.shuffle_songs_in_the_playlist(playlist_name,shuffled_playlist)
+                            shuffled_playlist = self.playlist_object.shuffle_songs_in_the_playlist(playlist_name,shuffled_playlist)
                         elif shuffle_again == 'n':
                             break
-                    playlist_object.play_songs_in_the_playlist(playlist_name, library_object)
+                    self.playlist_object.play_songs_in_the_playlist(playlist_name, self.library_object)
                 elif (playlist_mode == 3):
-                    playlist_object.loop_songs_in_the_playlist(playlist_name, library_object)
+                    self.playlist_object.loop_songs_in_the_playlist(playlist_name, self.library_object)
                 else:
-                    playlist_object.play_songs_in_the_playlist(playlist_name, library_object)
+                    self.playlist_object.play_songs_in_the_playlist(playlist_name, self.library_object)
 
             elif choice==10:
                 print("you chose an option to see Recently played Songs from the Library\n")
-                playlist_object.display_songs_in_recently_played_stack()
+                self.playlist_object.display_songs_in_recently_played_stack()
                 recent_play = input("do you wish to play a song from the recently played list y/n?")            
                 if (recent_play == 'y'):
                     recent_title_name = input("please enter the name of the song: ")
                     print("\nplaying the song selected from recent played stack ",recent_title_name)
-                    library_object.show_info_about_song_title_from_musicon_library(recent_title_name)
-                    playlist_object.play_individual_song_on_user_input(recent_title_name)
+                    self.library_object.show_info_about_song_title_from_musicon_library(recent_title_name)
+                    self.playlist_object.play_individual_song_on_user_input(recent_title_name)
                 elif (recent_play == 'n'):
                     print("No selection happened , leaving ")
 
